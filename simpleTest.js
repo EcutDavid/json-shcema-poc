@@ -25,7 +25,7 @@ describe('Basic test', () => {
     assert.equal(true, res.errors.length > 0)
   })
 
-  it('simple object should be supported', () => {
+  it('Simple object should be supported', () => {
     const schema = {
       "title": "Product",
       "description": "A product from Acme's catalog",
@@ -48,5 +48,29 @@ describe('Basic test', () => {
     }
     const res = validator.validate(obj, schema)
     assert.equal(0, res.errors.length)
+  })
+
+  it('Restrict properties', () => {
+    const schema = {
+      "type": "object",
+      "properties": {
+        "target": {}
+      },
+      "additionalProperties": false,
+      "required": [ "target" ]
+    }
+
+    const obj = {
+      target: {}
+    }
+    let res = validator.validate(obj, schema)
+    assert.equal(0, res.errors.length)
+
+    const multipleKeyObj = {
+      target: {},
+      res: {}
+    }
+    res = validator.validate(multipleKeyObj, schema)
+    assert.equal(true, res.errors.length > 0)
   })
 })
